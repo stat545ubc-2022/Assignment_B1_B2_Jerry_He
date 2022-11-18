@@ -1,5 +1,5 @@
-# Assignment B1 & B2 Repository for Jerry He
-This repo contains files related to assignments B1 and B2 for STAT545B. These assignments consist of creating, documenting, and testing functions in R as well as wrapping the functions into packages.
+# Assignment B1 for Jerry He
+This repo contains files related to assignments B1 for STAT545B. These assignments consist of creating, documenting, and testing functions in R as well as wrapping the functions into packages.
 
 ## Files
 ### `README.md`
