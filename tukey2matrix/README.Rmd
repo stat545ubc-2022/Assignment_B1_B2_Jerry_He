@@ -1,0 +1,52 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# tukey2matrix
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+tukey2matrix contains one primary function `tukey_to_matrix`. The main goal of `tukey_to_matrix()` is to take the output of a `TukeyHSD()` function and convert it into a reader-friendly matrix array and comes with an option to substitute statistically significant observation with "*" for user scanning of data. 
+
+## Installation
+
+You can install the development version of tukey2matrix from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("stat545ubc-2022/Assignment_B1_B2_Jerry_He/tukey2matrix")
+```
+
+
+## Example
+
+This a basic example of `tukey_to_matrix()` usage:
+
+```{r example}
+# Load the package
+library(tukey2matrix)
+
+# First perform an ANOVA on data from the iris dataset
+AOV_Out <- aov(Petal.Length ~ Species, iris)
+
+# Perform a TukeyHSD() test on the ANOVA analysis
+TukeyHSD_Out <- TukeyHSD(AOV_Out)
+
+# Use tukey_to_matrix() to convert the TukeyHSD() output to a user-friendly format
+tukey_to_matrix(tukey_object = TukeyHSD_Out, element = Species)
+
+# Use tukey_to_matrix() to convert the TukeyHSD() output to a user-friendly format, substituting statistically significant values with asterisks "*"
+tukey_to_matrix(TukeyHSD_Out, Species, significance = FALSE)
+```

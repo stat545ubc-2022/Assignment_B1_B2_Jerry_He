@@ -1,0 +1,23 @@
+Package: tukey2matrix
+Title: Convert TukeyHSD() Output to a Matrix
+Version: 0.0.0.9000
+Authors@R: 
+    person("Jerry", "He", , "jerryyhe@student.ubc.ca", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: The tukey2matrix package contains one core function, tukey_to_matrix() that converts the output object of TukeyHSD() function to a reader-friendly matrix. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    data.table,
+    dplyr,
+    magrittr,
+    tibble,
+    tidyr
+
