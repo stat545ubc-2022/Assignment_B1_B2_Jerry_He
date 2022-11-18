@@ -39,9 +39,9 @@ Quick rundown of what we're going to do. This function should take any output of
 #' @examples
 #' AOV_Out <- aov(Petal.Length ~ Species, iris)
 #' TukeyHSD_Out <- TukeyHSD(AOV_Out)
-#' tukey2matrix(input = TukeyHSD_Out, element = Species)
-#' tukey2matrix(TukeyHSD_Out, Species, significance = FALSE)
-tukey2matrix <- function(tukey_object, element, significance = TRUE) {
+#' tukey_to_matrix(input = TukeyHSD_Out, element = Species)
+#' tukey_to_matrix(TukeyHSD_Out, Species, significance = FALSE)
+tukey_to_matrix <- function(tukey_object, element, significance = TRUE) {
   
   # Turn TukeyHSD output into a dataframe and turn the rownames into a column 
   data <- as.data.frame(tukey_object[[deparse(substitute(element))]]) %>% 
@@ -110,8 +110,8 @@ trees_aov <- aov(diameter ~ genus_name, trees)
 # Now let's TukeyHSD() to get p-values between comparisons
 trees_tukey <- TukeyHSD(trees_aov) 
 
-# Finally, let's use `tukey2matrix()` now to convert the output into something readable.
-converted_trees <- tukey2matrix(trees_tukey, genus_name) 
+# Finally, let's use `tukey_to_matrix()` now to convert the output into something readable.
+converted_trees <- tukey_to_matrix(trees_tukey, genus_name) 
 head(converted_trees %>% select(1:5))
 ```
 
@@ -127,48 +127,48 @@ penguins_aov <- aov(bill_length_mm ~ species + island, penguins)
 penguins_tukey <- TukeyHSD(penguins_aov)
 
 # And finally, convert the TukeyHSD() output to a readable dataframe, specifically let's look at p-values of species first
-converted_penguins_species <- tukey2matrix(penguins_tukey, species)
+converted_penguins_species <- tukey_to_matrix(penguins_tukey, species)
 head(converted_penguins_species)
 
 # Also, we can also look at p-values of island comparisons, but let's turn significance off for this one:
-converted_penguins_island <- tukey2matrix(penguins_tukey, island)
+converted_penguins_island <- tukey_to_matrix(penguins_tukey, island)
 head(converted_penguins_island)
 ```
 
 # Exercise 4: Test the Function (25 points)
 
-Test the basic functionality of `tukey2matrix`. Specifically, test for the following:\
-1. That the column of the `tukey2matrix()` output matches what we would expect using the `iris` dataset.\
-2. That the values in the column of the `tukey2matrix()` output with `significance = FALSE` matches what we would expect using the `iris` dataset.\
-3. That the values in the `TukeyHSD()` output are mapped correctly in `tukey2matrix()`.\
-4. That calling a specific element from the `TukeyHSD()` output into `tukey2matrix()` actually results in an output dataframe from that element.
+Test the basic functionality of `tukey_to_matrix`. Specifically, test for the following:\
+1. That the column of the `tukey_to_matrix()` output matches what we would expect using the `iris` dataset.\
+2. That the values in the column of the `tukey_to_matrix()` output with `significance = FALSE` matches what we would expect using the `iris` dataset.\
+3. That the values in the `TukeyHSD()` output are mapped correctly in `tukey_to_matrix()`.\
+4. That calling a specific element from the `TukeyHSD()` output into `tukey_to_matrix()` actually results in an output dataframe from that element.
 
 ```{r}
 test_that("Basic Functionality Testing", {
-  expect_equal(as.list(tukey2matrix(TukeyHSD(aov(Sepal.Length ~ Species, iris)), Species)["versicolor"])[[1]],
+  expect_equal(as.list(tukey_to_matrix(TukeyHSD(aov(Sepal.Length ~ Species, iris)), Species)["versicolor"])[[1]],
                c(as.character(NA), "***", "***")) # Does `versicolor` column match expected  
   
-  expect_equal(as.list(tukey2matrix(TukeyHSD(aov(Sepal.Length ~ Species, iris)), Species, significance = FALSE)["virginica"])[[1]],
+  expect_equal(as.list(tukey_to_matrix(TukeyHSD(aov(Sepal.Length ~ Species, iris)), Species, significance = FALSE)["virginica"])[[1]],
                c(8.287558e-09	, NA, 2.997602e-15)) # Does `virginica` col match expected values
   
-  expect_equal(tukey2matrix(TukeyHSD(aov(Sepal.Length ~ Species, iris)), Species, FALSE)["versicolor", "virginica"],
+  expect_equal(tukey_to_matrix(TukeyHSD(aov(Sepal.Length ~ Species, iris)), Species, FALSE)["versicolor", "virginica"],
                TukeyHSD(aov(Sepal.Length ~ Species, iris))$Species['virginica-versicolor', 'p adj']) # Are p-values mapped correctly
   
-  expect_equal(colnames(tukey2matrix(TukeyHSD(aov(bill_length_mm ~ species + island, penguins)), island)),
+  expect_equal(colnames(tukey_to_matrix(TukeyHSD(aov(bill_length_mm ~ species + island, penguins)), island)),
                c("Dream", "Torgersen", "Biscoe")) # Does calling `island` element of TukeyHSD() output actually result in output df of island
   
 })
 ```
 
-Additionally, test for common errors. Note that while `tukey2matrix()` exclusively takes `TukeyHSD()` outputs, it should be able to take any variation of `TukeyHSD()` output. Specifically:  
+Additionally, test for common errors. Note that while `tukey_to_matrix()` exclusively takes `TukeyHSD()` outputs, it should be able to take any variation of `TukeyHSD()` output. Specifically:  
 1. Test if passing an invalid TukeyHSD element results in an error.  
 2. Test if passing a non-TukeyHSD() object results in an error. 
 ```{r}
 test_that("Basic Error Testing", {
-  expect_error(tukey2matrix(TukeyHSD(aov(Sepal.Length ~ Species, iris)), Fake_Col), 
+  expect_error(tukey_to_matrix(TukeyHSD(aov(Sepal.Length ~ Species, iris)), Fake_Col), 
   "Can't subset columns that don't exist.")
   
-  expect_error(tukey2matrix(aov(bill_length_mm ~ species + island, penguins)), 
+  expect_error(tukey_to_matrix(aov(bill_length_mm ~ species + island, penguins)), 
                "Can't subset columns that don't exist")
 
 })

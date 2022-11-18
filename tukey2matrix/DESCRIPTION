@@ -1,6 +1,6 @@
 Package: tukey2matrix
 Title: Convert TukeyHSD() Output to a Matrix
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Jerry", "He", , "jerryyhe@student.ubc.ca", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
